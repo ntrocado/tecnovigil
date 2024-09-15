@@ -1,7 +1,7 @@
 (in-package :col)
 
-(defvar +reset+ 0)
-(defvar +onset+ 1)
+(defconstant +reset+ 0)
+(defconstant +onset+ 1)
 
 (defparameter *buf* (buffer-alloc (* (sc::sample-rate *s*) 5)))
 
@@ -37,3 +37,13 @@
 
 ;(synth 'bit-player :start (random (frames *buf*)))
 
+(defsynth grains ((buffer *buf*) (rate 1) (start-pos .5) (amp 1.0) (gate 1))
+  (let* ((t-rate (range (lf-tri.kr .2) 15 24))
+	 (dur (/ 12 t-rate))
+	 (clk (impulse.kr t-rate))
+	 (position (+ (* (buf-dur.kr buffer) start-pos)
+		      (t-rand.kr 0 0.05 clk)))
+	 (pan (range (lf-noise1.kr 10) -1 1)))
+    (out.ar 0 (* (tgrains.ar 4 clk buffer rate position dur pan 0.5)
+		 (env-gen.ar (asr 5 1 3) :gate gate :act :free)
+		 amp))))
