@@ -3,7 +3,11 @@
 (defconstant +reset+ 0)
 (defconstant +onset+ 1)
 
-(defparameter *buf* (buffer-alloc (* (sc::sample-rate *s*) 5)))
+(defparameter *buf* (buffer-alloc (* (sc::sample-rate *s*) 60)))
+(defparameter *voz* (buffer-read "~/OneDrive/Documents/Eureka/projectos/algoritmo/voz.wav"))
+
+(defun test-audio ()
+  (buffer-read-channel #p"~/Downloads/573814__trp__audience-crowd-party-voices-theatre-caa-190209.mp3" :channels 1 :bufnum (bufnum *buf*)))
 
 (defparameter *onsets* '())
 
@@ -28,12 +32,24 @@
 
 (defparameter *persist* (make-group :pos :before :to 1))
 
-(defparameter *rec-node* (synth 'rec :to *persist*))
+(defparameter *rec-node* '())
 
-(defsynth bit-player ((buf *buf*) (start 0) (dur .5))
-  (out.ar 0 (pan2.ar (* (play-buf.ar 1 buf 1 :start-pos start)
-			(env-gen.ar (env '(0 1 1 0) (list .03 dur .03))
-				    :act :free)))))
+(defun start-rec ()
+  (setf *rec-node* (synth 'rec :to *persist*)))
+
+(defun stop-rec ()
+  (when *rec-node* (free *rec-node*))
+  (setf *rec-node* nil))
+
+;;; Play
+
+(defsynth bit-player ((buf *buf*) (start 0) (reverb 0) (pan-speed .5) (atk .03) (rel .03) (amp 1))
+  (out.ar 0 (pan2.ar (freeverb.ar (* (play-buf.ar 1 buf 1 :start-pos start)
+				     (env-gen.ar (perc atk rel)
+						 :act :free)
+				     amp)
+				  :mix reverb)
+		     (range (lf-tri.kr pan-speed) -1.0 1.0))))
 
 ;(synth 'bit-player :start (random (frames *buf*)))
 

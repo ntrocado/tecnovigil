@@ -8,4 +8,8 @@
   (:nicknames #:col)
   (:export
    #:*buf*
-   #:*onsets*))
+   #:*onsets*
+   #:*voz*
+   #:start-rec
+   #:stop-rec
+   #:*rec-node*))

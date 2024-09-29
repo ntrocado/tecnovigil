@@ -6,7 +6,7 @@
   :license  "Specify license here"
   :version "0.0.1"
   :serial t
-  :depends-on (#:cl-patterns/supercollider #:kai)
+  :depends-on (#:cl-patterns/supercollider)
   :components ((:file "package")
                (:file "setup")
 	       (:file "sc")
