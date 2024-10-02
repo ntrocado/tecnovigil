@@ -51,7 +51,6 @@
 				  :mix reverb)
 		     (range (lf-tri.kr pan-speed) -1.0 1.0))))
 
-;(synth 'bit-player :start (random (frames *buf*)))
 
 (defsynth grains ((buffer *buf*) (rate 1) (start-pos .5) (amp 1.0) (gate 1))
   (let* ((t-rate (range (lf-tri.kr .2) 15 24))

@@ -1,11 +1,11 @@
 (in-package :tecnovigil)
 
-(setf (clock-condition-handler *clock*) 'skip-event)
+;(setf (clock-condition-handler *clock*) 'skip-event)
 
 (pb :pat
   :type (pwrand '(:note :rest) '(.7 .3))
   :instrument 'bit-player
-  :amp 1.1
+  :amp 1.5
   :dur (pseq '(1/8 1/2 1/3 1/6))
   :rel (pseq '(.3  1.1  .4  .1))
   :start (prand (or col:*onsets* '(0)))
@@ -18,7 +18,7 @@
   :amp (pr (pwhite .01 .75) 12)
   :rel (pwhite .4 .9)
   :atk .01
-  :start (pr (prand col:*onsets*) 12)
+  :start (pr (prand (or col:*onsets* '(0))) 12)
   :quant 0)
 
 (pb :voz
@@ -55,6 +55,7 @@
   :dur (pseq '(5 2 16 3))
   :start-pos (loop :repeat 4 :collect (random 1.0))
   :rate (pf (loop :repeat 4 :collect (+ .5 (random 1.0))))
+  :amp .5
   :quant 0)
 
 (defparameter *random-seq-on* nil)
